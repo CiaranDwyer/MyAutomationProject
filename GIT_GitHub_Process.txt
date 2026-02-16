@@ -1,0 +1,240 @@
+# ==========================================================
+# COMPLETE TEAM-BASED GIT & GITHUB WORKFLOW (INDUSTRY STANDARD)
+# Python + Selenium + Pytest Automation Project
+# ==========================================================
+
+
+# ==========================================================
+# 1. PROJECT STRUCTURE (LOCAL)
+# Keep your automation framework organised
+
+MyAutomationProject/
+│
+├── tests/                 # Test scripts
+│   ├── test_login.py
+│   └── test_checkout.py
+│
+├── pages/                 # Page Object Models (POM)
+│   ├── login_page.py
+│   └── checkout_page.py
+│
+├── utils/                 # Helpers / config readers
+│   └── helpers.py
+│
+├── reports/               # Test reports
+│
+├── requirements.txt       # Python dependencies
+├── pytest.ini             # Pytest configuration
+└── README.md              # Project description
+
+
+# ==========================================================
+# 2. INITIALIZE GIT LOCALLY (FIRST TIME ONLY)
+
+cd MyAutomationProject
+git init
+git add .
+git commit -m "Initial commit with project structure"
+
+
+# ==========================================================
+# 3. CONNECT LOCAL REPO TO GITHUB (FIRST TIME ONLY)
+
+# Create repository on GitHub first
+
+git remote add origin https://github.com/username/MyAutomationProject.git
+git branch -M main
+git push -u origin main
+
+# Now local main is connected to GitHub main.
+
+
+# ==========================================================
+# 4. DAILY TEAM WORKFLOW (PROFESSIONAL STANDARD)
+
+# IMPORTANT RULE:
+# Never work directly on main.
+# main must stay stable and protected.
+
+
+# ----------------------------------------------------------
+# STEP 1: Always start by updating your local main
+# ----------------------------------------------------------
+
+git checkout main
+git pull origin main
+
+# This ensures your local main matches GitHub main.
+
+
+# ----------------------------------------------------------
+# STEP 2: Create your own feature branch from main
+# ----------------------------------------------------------
+
+git checkout -b feature/login_test
+
+# This branch exists locally only (for now).
+# You now work safely without touching main.
+
+
+# ----------------------------------------------------------
+# STEP 3: Work on your automation feature
+# ----------------------------------------------------------
+
+"""
+Example: tests/test_login.py
+
+def test_valid_login(driver):
+    login_page = LoginPage(driver)
+    login_page.open()
+    login_page.login("username", "password")
+    assert login_page.is_logged_in()
+"""
+
+# Commit small, meaningful changes as you work.
+
+
+# ----------------------------------------------------------
+# STEP 4: Stage and commit your changes
+# ----------------------------------------------------------
+
+git add tests/test_login.py
+git commit -m "Add login test with valid credentials"
+
+
+# ----------------------------------------------------------
+# STEP 5: Push your feature branch to GitHub
+# ----------------------------------------------------------
+
+git push origin feature/login_test
+
+# Now:
+# - The branch exists on GitHub.
+# - Your team can see it.
+# - You can create a Pull Request.
+
+
+# ----------------------------------------------------------
+# STEP 6: Create Pull Request (PR) on GitHub
+# ----------------------------------------------------------
+
+# 1. Go to GitHub repository
+# 2. Click "Compare & pull request"
+# 3. Request merge into main
+# 4. Team reviews your code
+# 5. After approval → Merge PR
+
+# IMPORTANT:
+# The merge happens on GitHub, NOT locally.
+
+
+# ==========================================================
+# IMPORTANT: DO YOU MERGE LOCALLY?
+# ==========================================================
+
+# In professional team environments:
+# ❌ You DO NOT run:
+#    git checkout main
+#    git merge feature/login_test
+#    git push origin main
+#
+# That bypasses:
+# - Code review
+# - Branch protection
+# - CI checks (Jenkins)
+# - Approval rules
+#
+# Instead:
+# ✅ The PR is merged into main on GitHub.
+
+
+# ==========================================================
+# STEP 7: After PR is merged on GitHub
+# ==========================================================
+
+# Your local main is now OUTDATED.
+# You must update it:
+
+git checkout main
+git pull origin main
+
+# Now your local main includes the merged feature.
+
+
+# ==========================================================
+# STEP 8: Clean up feature branch
+# ==========================================================
+
+git branch -d feature/login_test
+git push origin --delete feature/login_test
+
+# This keeps the repository clean.
+
+
+# ==========================================================
+# FULL PROFESSIONAL FLOW SUMMARY
+# ==========================================================
+
+# 1. Pull latest main
+# 2. Create feature branch
+# 3. Work + commit
+# 4. Push feature branch
+# 5. Open Pull Request
+# 6. PR merged into main (ON GITHUB)
+# 7. Pull updated main locally
+# 8. Delete feature branch
+
+
+# ==========================================================
+# WHAT EACH COMMAND DOES (TEAM CONTEXT)
+# ==========================================================
+
+# git pull
+# -> Downloads and merges latest changes from GitHub
+
+# git checkout -b branch_name
+# -> Creates a new local branch from current branch
+
+# git push origin branch_name
+# -> Sends your branch commits to GitHub
+
+# Pull Request
+# -> Allows code review and controlled merge into main
+
+# Merge (via PR)
+# -> Combines your feature branch changes into main safely
+
+
+# ==========================================================
+# VISUAL FLOW (TEAM ENVIRONMENT)
+# ==========================================================
+
+# You (local machine)
+#       |
+#       | git push feature branch
+#       ↓
+# GitHub (feature branch)
+#       |
+#       | Pull Request + Review
+#       ↓
+# GitHub merges into main
+#       |
+#       | git pull origin main
+#       ↓
+# Your local main updated
+
+
+# ==========================================================
+# CRITICAL TEAM RULES
+# ==========================================================
+
+# - Never work directly on main
+# - Never merge locally in team environments
+# - Always use Pull Requests
+# - Always pull main before starting work
+# - Keep commits small and meaningful
+# - Delete feature branches after merge
+
+# ==========================================================
+# END OF COMPLETE TEAM WORKFLOW NOTES
+# ==========================================================
