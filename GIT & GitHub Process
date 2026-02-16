@@ -1,0 +1,35 @@
+1. Setup Project Structure (Local)
+
+MyAutomationProject/
+│
+├── tests/                 # All your test scripts
+│   ├── test_login.py
+│   └── test_checkout.py
+│
+├── pages/                 # Page Object Models (if using POM)
+│   ├── login_page.py
+│   └── checkout_page.py
+│
+├── utils/                 # Utility scripts (like helpers, config reader)
+│   └── helpers.py
+│
+├── reports/               # Test reports (generated after tests)
+│
+├── requirements.txt       # List of Python packages your project needs
+├── pytest.ini             # Pytest configuration file
+└── README.md              # Project description
+
+Why this structure?
+tests/ is for actual test scripts.
+pages/ is for Selenium Page Objects (keeps UI interaction separate from tests).
+utils/ keeps helper functions centralized.
+requirements.txt makes it easy to share your project and install dependencies with pip install -r requirements.txt.
+
+2. Initialize Git Locally
+cd MyAutomationProject
+git init                  # Initialize Git in your local folder
+git add .                 # Stage all files
+git commit -m "Initial commit with project structure"
+
+
+

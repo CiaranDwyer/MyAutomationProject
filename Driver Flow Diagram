@@ -1,0 +1,57 @@
+1️⃣ Pytest starts the test
+   └─> sees test_login_page(driver)
+       └─> looks for a fixture named `driver` in conftest.py
+
+2️⃣ conftest.py fixture runs
+   ┌───────────────────────────────┐
+   │ def driver():                  │
+   │    driver = webdriver.Chrome() │  <-- Chrome browser opens
+   │    yield driver                │  <-- gives browser to test
+   │    driver.quit()               │  <-- closes browser after test
+   └───────────────────────────────┘
+
+3️⃣ Test function receives the driver
+   ┌───────────────────────────────┐
+   │ def test_login_page(driver):   │
+   │    login_page = LoginPage(driver) │ <-- driver passed to LoginPage
+   │    login_page.open_url()       │
+   │    login_page.login(...)       │
+   └───────────────────────────────┘
+
+4️⃣ LoginPage passes driver to BasePage
+   ┌───────────────────────────────┐
+   │ class LoginPage(BasePage):    │
+   │   def __init__(self, driver): │
+   │       super().__init__(driver)│ <-- BasePage constructor called
+   └───────────────────────────────┘
+
+5️⃣ BasePage constructor stores driver and creates wait
+   ┌───────────────────────────────┐
+   │ class BasePage:               │
+   │   def __init__(self, driver): │
+   │       self.driver = driver    │ <-- store driver
+   │       self.wait = WebDriverWait(driver, 10) │ <-- reusable wait
+   └───────────────────────────────┘
+
+6️⃣ BasePage methods can now use driver
+   ┌───────────────────────────────┐
+   │ login_page.click(locator)      │
+   │ → uses self.wait + self.driver │
+   │ → waits for element to be      │
+   │   clickable then clicks it     │
+   └───────────────────────────────┘
+
+7️⃣ Test continues
+   └─> other actions on page objects
+
+   Plain English summary
+
+Pytest starts → fixture creates browser → test receives driver.
+
+Test creates LoginPage(driver) → LoginPage passes driver to BasePage.
+
+BasePage constructor sets up self.driver and self.wait.
+
+Any method in BasePage (like click) uses self.driver to interact with the browser.
+
+Test calls page methods (login_page.click_login()) → which internally use BasePage’s click() if designed that way.

@@ -1,0 +1,57 @@
+# ------------------------
+# 1. Basic Pytest Commands
+# ------------------------
+
+pytest
+# Run all tests in the project (looks for files starting with 'test_' or ending with '_test.py')
+
+pytest -v
+# Run all tests with verbose output (shows each test name and status)
+
+pytest -x
+# Stop running tests after the first failure
+
+pytest -s
+# Show print statements in the terminal during test execution
+
+# ------------------------
+# 2. Running Specific Test Files
+# ------------------------
+
+pytest path/to/test_file.py
+# Run only the tests in a specific file
+# Example: pytest tests/test_example.py
+
+pytest path/to/test_file.py::test_function_name
+# Run only a specific test function inside a file
+# Example: pytest tests/test_example.py::test_addition
+
+# ------------------------
+# 3. HTML Report Generation
+# ------------------------
+
+# First, install the HTML plugin (only once):
+pip install pytest-html
+# Allows pytest to generate HTML reports
+
+pytest --html=report.html
+# Run all tests and save an HTML report as 'report.html' in the current folder
+
+pytest --html=report.html --self-contained-html
+# Generates a single, self-contained HTML file with all styling included
+
+pytest tests/test_example.py --html=report.html --self-contained-html
+# Generate an HTML report for a specific test file
+
+pytest tests/test_example.py::test_addition --html=report.html --self-contained-html
+# Generate an HTML report for a specific test function
+
+pytest -v --html=report.html --self-contained-html
+# Verbose output + generate an HTML report
+
+# ------------------------
+# 4. Optional: Save Report to Specific Folder
+# ------------------------
+
+pytest --html=/Users/yourname/Desktop/report.html --self-contained-html
+# Save the report to a specific location, e.g., Desktop

@@ -1,0 +1,118 @@
+# =========================
+# PYTHON ENVIRONMENT CHEAT SHEET
+# For Conda, Virtualenv, and PyCharm
+# =========================
+
+# -------------------------
+# 1️⃣ Check active environment
+# -------------------------
+
+# Conda
+conda info --envs    # Active environment has a '*'
+
+# Virtualenv
+echo $VIRTUAL_ENV       # macOS/Linux
+echo %VIRTUAL_ENV%      # Windows
+# Or look at your terminal prompt: (venv_name)
+
+# PyCharm GUI
+# Preferences/Settings → Project → Python Interpreter
+# Shows current interpreter (virtualenv, Conda, or system Python)
+
+# -------------------------
+# 2️⃣ List all environments
+# -------------------------
+
+# Conda
+conda env list
+
+# Virtualenv
+# Virtualenvs are just folders (usually .venv inside project)
+# No central list; check project folders
+
+# -------------------------
+# 3️⃣ Activate environment
+# -------------------------
+
+# Conda
+conda activate env_name
+
+# Virtualenv
+
+# macOS / Linux
+source .venv/bin/activate
+
+# Windows CMD
+.venv\Scripts\activate.bat
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+
+# PyCharm GUI
+# Preferences/Settings → Project → Python Interpreter → Select/Add interpreter
+# PyCharm automatically uses this environment for the project
+
+# -------------------------
+# 4️⃣ Deactivate environment
+# -------------------------
+
+# Terminal (both Conda and virtualenv)
+deactivate
+# or for Conda specifically
+conda deactivate
+
+# PyCharm GUI
+# Not needed; changing the project interpreter automatically switches environments
+
+# -------------------------
+# 5️⃣ Check Python version
+# -------------------------
+python --version
+# Shows Python version of the active environment (Conda or virtualenv)
+
+# -------------------------
+# 6️⃣ Check installed packages
+# -------------------------
+
+# Conda
+conda list
+
+# Virtualenv
+pip list
+
+# -------------------------
+# 7️⃣ Check Python executable path
+# -------------------------
+which python    # macOS/Linux
+where python    # Windows
+# Confirms exact Python being used by the active environment
+
+# -------------------------
+# 8️⃣ Quick workflow for switching environments
+# -------------------------
+# 1. Check current environment
+conda info --envs    # Conda
+echo $VIRTUAL_ENV    # virtualenv
+
+# 2. Deactivate current environment
+deactivate
+
+# 3. Activate desired environment
+conda activate dwyer            # Conda
+source .venv/bin/activate       # Virtualenv (macOS/Linux)
+
+# 4. Confirm active environment
+python --version
+which python
+pip list / conda list
+
+# -------------------------
+# 9️⃣ Notes / Tips
+# -------------------------
+# - .venv = project-specific virtualenv → safe for project isolation
+# - Conda envs = can be shared across projects or dedicated per project
+# - Deactivating does NOT delete the environment
+# - PyCharm interpreter settings are permanent for the project
+# - Terminal activation is temporary; only affects commands run there
+# - Terminal prompt shows current virtualenv (e.g., (.venv))
+# - Conda '*' only appears if the environment is active in that terminal

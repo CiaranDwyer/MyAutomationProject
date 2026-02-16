@@ -1,0 +1,18 @@
+pip install pytest-html
+pytest --html=report.html
+
+pytest -v
+
+
+- Run all tests
+- Verbose console output (-v)
+- Don’t hide your print statements (-s)
+
+Generate a nice HTML report (--html=report.html)
+
+Print Text to Console
+pytest --html=report.html -v -s
+
+Print Text Report
+pytest --html=report.html -v
+

@@ -1,0 +1,9 @@
+Tests describe what happens
+
+Page objects describe how
+
+Fixtures manage resources
+
+JSON provides data
+
+Pytest glues everything together

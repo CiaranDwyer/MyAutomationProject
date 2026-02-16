@@ -1,0 +1,153 @@
+    SauceDemo Selenium POM Framework Reference
+
+    This README documents the flow of execution and architecture of the SauceDemo Page Object Model (POM) Selenium framework using Pytest and JSON-driven tests.
+    Use it as a reference to understand driver behavior, page objects, and test flow.
+
+    1. Architecture Overview
+    | Component            | Purpose                                                                |
+    | -------------------- | ---------------------------------------------------------------------- |
+    | `conftest.py`        | Handles browser setup/teardown using Pytest fixtures (`driver`)        |
+    | `base_page.py`       | Provides common utilities for all page objects (clicks, waits, alerts) |
+    | `login_page.py`      | Defines login page elements and actions                                |
+    | `home_page.py`       | Defines home page elements and actions                                 |
+    | `test_login_page.py` | Contains the test function that iterates through users in JSON         |
+    | `test_data.json`     | Stores credentials for test users                                      |
+
+    2. Test Data
+    {
+    "users":
+        { "userName": "standard_user", "password": "secret_sauce" },
+        { "userName": "problem_user", "password": "secret_sauce" }
+
+    The test loads this file and loops through all users.
+    Each user is tested independently in a clean session.
+
+    3. Test Execution Flow
+    Step 1: Pytest Starts the Test
+    Run a test:
+    pytest test_regression/test_login_page.py::test_user_can_login
+
+    Step 2: driver Fixture Execution
+    @pytest.fixture
+    def driver():
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-save-password-bubble")
+        options.add_argument("--disable-features=PasswordLeakDetection")
+        options.add_experimental_option("prefs", {"credentials_enable_service": False, "profile.password_manager_enabled": False})
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver.maximize_window()
+        yield driver
+        driver.close()
+        driver.quit()
+
+    Before yield → browser setup
+    Yield → hands control to the test
+    After yield → browser teardown
+
+    Step 3: Load Test Data
+    with open("test_data/test_data.json") as f:
+        data = json.load(f)
+    Loads user credentials for iteration.
+
+    Step 4: Loop Through Users
+    for user in data["users"]:
+        driver.delete_all_cookies()
+        driver.refresh()
+        username = user["userName"]
+        password = user["password"]
+
+    Clears cookies for a clean session between users.
+    Reuses the same browser session.
+
+    Step 5: Page Object Interaction
+    1. Initialize LoginPage
+    login_page = LoginPage(driver)
+
+    2. Open Login Page
+    login_page.open_url()
+
+    3. Perform Login
+    home_page = login_page.login(username, password)
+    Enters username/password and clicks login.
+    Returns HomePage object for further actions.
+
+    Step 6: Verify HomePage Loaded
+    title = home_page.get_title()
+    assert title == "Swag Labs"
+    home_page.is_this_page_loaded()
+
+    Validates page title.
+    Checks that essential homepage elements are loaded.
+
+    Step 7: Interact with HomePage
+    home_page.click_add_to_cart_button()
+
+    Example of post-login actions (can extend to checkout, logout, etc.).
+
+    Step 8: Reset Session
+    driver.delete_all_cookies()
+
+    Ensures next user login is clean.
+    Browser session remains open for speed.
+
+    4. BasePage Utilities
+    | Method           | Purpose                                        |
+    | ---------------- | ---------------------------------------------- |
+    | `click(locator)` | Waits for element to be clickable, then clicks |
+    | `get_title()`    | Returns page title                             |
+    | `accept_alert()` | Waits for a JavaScript alert and accepts it    |
+    Reduces repeated code in page objects.
+
+    5. ChromeOptions for Password Popups
+    options.add_argument("--disable-save-password-bubble")
+    options.add_argument("--disable-features=PasswordLeakDetection")
+    options.add_experimental_option("prefs", {"credentials_enable_service": False, "profile.password_manager_enabled": False})
+
+    Prevents Chrome from blocking the test with password breach notifications.
+
+
+    6. Driver Lifecycle
+    | Event           | Action                                         |
+    | --------------- | ---------------------------------------------- |
+    | Test starts     | Pytest discovers test & calls `driver` fixture |
+    | Fixture setup   | Chrome browser launched and maximized          |
+    | Test runs       | Page objects interact with driver              |
+    | Iterating users | Cookies cleared for clean session              |
+    | Test finishes   | Browser closed & quit via fixture teardown     |
+
+    7. Flow Summary Diagram
+    pytest test_user_can_login
+               |
+               v
+          driver fixture (setup)
+               |
+               v
+       test_user_can_login(driver)
+               |
+               +--> load JSON data
+               |
+               +--> for each user:
+               |       - driver.delete_all_cookies()
+               |       - LoginPage(driver).open_url()
+               |       - login_page.login(username, password)
+               |       - HomePage(driver).get_title()
+               |       - HomePage(driver).is_this_page_loaded()
+               |       - HomePage(driver).click_add_to_cart_button()
+               |
+               v
+          test complete
+               |
+               v
+          driver fixture (teardown: close & quit)
+
+
+    8. Best Practices
+    Use explicit waits (WebDriverWait) instead of time.sleep().
+    Do not open a new browser for each user; just clear cookies.
+    Return page objects from methods after navigation.
+    Centralize locators in page objects.
+    Use Pytest fixtures for setup/teardown.
+    Use ChromeOptions to avoid browser popups interfering with tests.
+
+
+
