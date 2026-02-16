@@ -1,0 +1,103 @@
+# ==========================================================
+# GIT & GITHUB TEAM WORKFLOW CHEAT SHEET (COPY-PASTE)
+# ==========================================================
+
+# -------------------------------
+# 1️⃣ Start of Day / New Work
+# -------------------------------
+# Make sure local main is up-to-date
+git checkout main
+git pull origin main
+
+# -------------------------------
+# 2️⃣ Create a new feature branch
+# -------------------------------
+# Never work directly on main
+git checkout -b feature/<description>
+
+# -------------------------------
+# 3️⃣ Work on your feature
+# -------------------------------
+# Make code changes / add tests
+# Check your Git status:
+git status
+
+# -------------------------------
+# 4️⃣ Stage and commit changes
+# -------------------------------
+git add <files>            # e.g., git add tests/test_login.py
+git commit -m "Short meaningful message"
+
+# -------------------------------
+# 5️⃣ Push feature branch to GitHub
+# -------------------------------
+git push origin feature/<description>
+
+# -------------------------------
+# 6️⃣ Open Pull Request (PR)
+# -------------------------------
+# On GitHub:
+# - Open PR from your branch → main
+# - Team reviews code
+# - After approval → Merge PR into main
+# ✅ Do NOT merge locally in a team environment
+
+# -------------------------------
+# 7️⃣ Update local main after PR merge
+# -------------------------------
+git checkout main
+git pull origin main
+
+# -------------------------------
+# 8️⃣ Clean up feature branch
+# -------------------------------
+git branch -d feature/<description>           # Delete local branch
+git push origin --delete feature/<description> # Delete remote branch
+
+# -------------------------------
+# 9️⃣ Quick Git status guide
+# -------------------------------
+# See which branch you are on:
+git branch
+
+# See uncommitted changes:
+git status
+
+# See commit history:
+git log --oneline
+
+# -------------------------------
+# 10️⃣ Common Commands by Situation
+# -------------------------------
+
+# I want to start new work
+git checkout main
+git pull origin main
+git checkout -b feature/<name>
+
+# I have local changes to commit
+git add <files>
+git commit -m "message"
+
+# I want to share my branch with team
+git push origin feature/<name>
+
+# I finished work and PR merged on GitHub
+git checkout main
+git pull origin main
+git branch -d feature/<name>
+git push origin --delete feature/<name>
+
+# -------------------------------
+# 11️⃣ Key Team Rules
+# -------------------------------
+# ✅ Never commit directly to main
+# ✅ Always create feature branches
+# ✅ Pull latest main before starting work
+# ✅ Use PR + review for merging
+# ✅ Commit frequently in small chunks
+# ✅ Delete feature branches after merge
+
+# ==========================================================
+# END OF TEAM WORKFLOW CHEAT SHEET
+# ==========================================================
