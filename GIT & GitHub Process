@@ -31,5 +31,18 @@ git init                  # Initialize Git in your local folder
 git add .                 # Stage all files
 git commit -m "Initial commit with project structure"
 
+3. Connect Local Repo to GitHub
+1. Create a Repo on GitHub (MyAutomationProject)
+2. Link local repo to Github
+git remote add origin https://github.com/username/MyAutomationProject.git
+git branch -M main        # Rename local branch to main (optional but standard)
+git push -u origin main   # Push initial code to GitHub
+
+After you've connected your local repo to GitHub and pushed the initial main branch
+Now your local main branch is synced with GithUBs main branch.
+
+
+
+
 
 
