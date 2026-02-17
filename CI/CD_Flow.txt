@@ -1,0 +1,111 @@
+#######################################################################
+# CI/CD CHEAT SHEET
+# Local Development (Conda) + GitHub + Jenkins Automation Flow
+#######################################################################
+
+##############################
+# 1️⃣ LOCAL DEVELOPMENT (CONDA)
+##############################
+
+# Activate your Conda environment
+conda activate project_structure_page_object_model
+
+# Install project dependencies locally (if needed)
+pip install selenium pytest pytest-html rich webdriver-manager python-dotenv requests
+
+# Check where a package is installed (inside Conda environment)
+pip show selenium
+
+# NOTE:
+# - Packages are installed inside:
+#   /usr/local/Caskroom/miniconda/base/envs/project_structure_page_object_model/lib/pythonX.X/site-packages
+# - This environment is ONLY for local development.
+# - Jenkins CANNOT see or use this Conda environment.
+
+
+##########################################
+# 2️⃣ CREATE CLEAN requirements.txt FOR CI
+##########################################
+
+# While Conda environment is active:
+pip freeze | grep -v "@" > requirements.txt
+
+# WHY:
+# - pip freeze lists installed packages
+# - grep -v "@" removes Conda file paths (file:///...)
+# - Jenkins cannot install path-based Conda builds
+# - Only real package==version lines should remain
+
+# Example clean requirements.txt:
+# selenium==4.24.0
+# pytest==8.4.1
+# pytest-html==4.2.0
+# rich==14.2.0
+# webdriver-manager==4.0.2
+# python-dotenv==1.2.1
+# requests==2.32.5
+
+
+##########################
+# 3️⃣ PUSH TO GITHUB
+##########################
+
+git add requirements.txt
+git commit -m "Update requirements for Jenkins CI"
+git push origin main
+
+
+###############################################################
+# 4️⃣ WHAT HAPPENS WHEN YOU MERGE TO MAIN (THE DOMINO EFFECT)
+###############################################################
+
+# STEP 1:
+# You merge code into the "main" branch on GitHub.
+
+# STEP 2:
+# GitHub webhook triggers Jenkins automatically.
+
+# STEP 3:
+# Jenkins creates a fresh workspace like:
+# /Users/<your_user>/.jenkins/workspace/selenium-automation-main
+
+# IMPORTANT:
+# - This workspace is completely separate from your local machine.
+# - It does NOT use your Conda environment.
+
+
+###############################################################
+# 5️⃣ WHAT JENKINS DOES INSIDE THE WORKSPACE
+###############################################################
+
+# Jenkins runs pipeline steps from your Jenkinsfile:
+
+python3 -m venv venv              # Create isolated virtual environment
+source venv/bin/activate          # Activate it
+pip install -r requirements.txt   # Install dependencies
+pytest --html=report.html         # Run automated tests
+
+# RESULT:
+# - Tests execute in Jenkins' own venv
+# - report.html is generated
+# - Build passes or fails automatically
+
+
+###############################################################
+# SUMMARY FLOW (FULL AUTOMATION PIPELINE)
+###############################################################
+
+# [Merge to main on GitHub]
+#            ↓
+# [GitHub webhook triggers Jenkins]
+#            ↓
+# [Jenkins creates fresh workspace]
+#            ↓
+# [Jenkins creates venv]
+#            ↓
+# [Jenkins installs requirements.txt]
+#            ↓
+# [Jenkins runs pytest]
+#            ↓
+# [Jenkins archives report + mar]()
+
