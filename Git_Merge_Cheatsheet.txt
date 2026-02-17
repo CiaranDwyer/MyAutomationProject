@@ -1,0 +1,137 @@
+==============================
+GIT MERGE CONFLICT CHEATSHEET
+==============================
+
+WHAT IS A MERGE CONFLICT?
+-------------------------
+A merge conflict happens when Git does not know which version of code to keep.
+This usually happens when two people change the same line in a file.
+
+Git stops and asks YOU to decide.
+
+
+WHEN DO MERGE CONFLICTS HAPPEN?
+-------------------------------
+- git pull
+- git merge branch-name
+- Pull Requests on GitHub
+- When two branches modify the same line
+
+
+WHAT A CONFLICT LOOKS LIKE
+--------------------------
+<<<<<<< HEAD
+print("Login successful")
+=======
+print("Login failed")
+>>>>>>> feature-branch
+
+HEAD = your current branch
+feature-branch = branch being merged
+
+Git is asking which version to keep.
+
+
+HOW TO RESOLVE USING TERMINAL
+=============================
+
+1. Check what files have conflicts:
+   git status
+
+2. Open the conflicted file.
+
+3. Decide what to keep:
+   - Keep your version
+   - Keep their version
+   - Combine both
+   - Or rewrite it completely
+
+4. Remove ALL conflict markers:
+   <<<<<<<
+   =======
+   >>>>>>>
+
+5. Save the file.
+
+6. Tell Git it’s resolved:
+   git add filename.py
+
+7. Finish the merge:
+   git commit -m "Resolved merge conflict"
+
+
+HOW TO RESOLVE USING PYCHARM
+============================
+
+1. When conflict happens, PyCharm shows:
+   "Unmerged files detected"
+
+2. Click:
+   Git → Resolve Conflicts
+
+3. You’ll see 3 panels:
+   LEFT   = Your version
+   RIGHT  = Incoming version
+   MIDDLE = Final result
+
+4. Choose:
+   - Accept Left
+   - Accept Right
+   - Accept Both
+   - Or manually edit middle
+
+5. Click Apply / Resolve.
+
+6. Commit:
+   Cmd + K (Mac)
+   Add message and Commit.
+
+
+HOW TO DECIDE WHAT TO KEEP
+==========================
+
+Ask:
+- What was I trying to change?
+- Why did the other person change it?
+- Which version matches project requirements?
+- Should both changes be combined?
+
+You are not limited to choosing one.
+You can edit it however you want.
+
+
+COMMON MISTAKES
+===============
+
+- Forgetting to delete conflict markers
+- Forgetting to run git add
+- Trying to commit before resolving all conflicts
+
+Always check:
+   git status
+
+
+USEFUL COMMANDS
+===============
+
+See conflicts:
+   git status
+
+Abort merge completely:
+   git merge --abort
+
+See commit history:
+   git log
+
+Undo everything (dangerous):
+   git reset --hard
+
+
+KEY IDEA
+========
+
+A merge conflict is not an error.
+It is Git asking:
+"Which code should exist?"
+
+You decide.
