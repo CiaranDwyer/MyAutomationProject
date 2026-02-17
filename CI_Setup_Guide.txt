@@ -1,0 +1,276 @@
+# 🚀 CI Setup Guide
+## GitHub → ngrok → Local Jenkins → Pytest (Selenium Framework)
+
+This document explains how to automatically run your Python Selenium + Pytest automation tests
+when code is merged into the `main` branch.
+
+------------------------------------------------------------
+🎯 GOAL
+------------------------------------------------------------
+
+When code is merged into `main` on GitHub:
+
+1. GitHub sends a webhook
+2. ngrok tunnels the request to your local machine
+3. Jenkins receives the webhook
+4. Jenkins pulls latest code from main
+5. Jenkins installs dependencies
+6. Jenkins runs pytest automatically
+
+------------------------------------------------------------
+🧱 PREREQUISITES
+------------------------------------------------------------
+
+You must have:
+
+- Python installed
+- Jenkins installed locally (http://localhost:8080)
+- ngrok installed
+- Automation project pushed to GitHub
+- requirements.txt file in project root
+- pytest included in requirements.txt
+
+Example project structure:
+
+project/
+│
+├── tests/
+├── pages/
+├── requirements.txt
+├── pytest.ini
+└── Jenkinsfile
+
+------------------------------------------------------------
+🥇 STEP 1 — Install Required Jenkins Plugins
+------------------------------------------------------------
+
+In Jenkins:
+
+Manage Jenkins
+→ Manage Plugins
+→ Available
+
+Install:
+
+- Git Plugin
+- GitHub Plugin
+- Pipeline Plugin
+
+Restart Jenkins if required.
+
+------------------------------------------------------------
+🥈 STEP 2 — Start Jenkins
+------------------------------------------------------------
+
+Start Jenkins and confirm it works:
+
+http://localhost:8080
+
+------------------------------------------------------------
+🥉 STEP 3 — Start ngrok Tunnel
+------------------------------------------------------------
+
+Run this command in terminal:
+
+ngrok http 8080
+
+You will see something like:
+
+Forwarding https://abc123.ngrok-free.app -> http://localhost:8080
+
+Copy the HTTPS URL:
+https://abc123.ngrok-free.app
+
+IMPORTANT:
+- Keep ngrok running
+- Do NOT close the terminal
+
+------------------------------------------------------------
+🏗 STEP 4 — Configure Jenkins Public URL
+------------------------------------------------------------
+
+In Jenkins:
+
+Manage Jenkins
+→ Configure System
+
+Scroll to:
+
+Jenkins Location
+
+Update the field:
+
+Jenkins URL
+
+Replace it with your ngrok URL:
+
+https://abc123.ngrok-free.app/
+
+IMPORTANT:
+- Must include trailing slash "/"
+
+Click Save.
+
+------------------------------------------------------------
+🏗 STEP 5 — Create Jenkins Pipeline Job
+------------------------------------------------------------
+
+In Jenkins:
+
+New Item
+→ Select Pipeline
+→ OK
+
+Name it:
+
+selenium-main-pipeline
+
+Under Pipeline section:
+
+Definition:
+Pipeline script from SCM
+
+SCM:
+Git
+
+Repository URL:
+https://github.com/YOUR_USERNAME/YOUR_REPO.git
+
+Branch:
+*/main
+
+Click Save.
+
+------------------------------------------------------------
+📝 STEP 6 — Add Jenkinsfile to Project Root
+------------------------------------------------------------
+
+Create a file in your project root called:
+
+Jenkinsfile
+
+Add the following content:
+
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'python3 -m venv venv'
+                sh '. venv/bin/activate && pip install --upgrade pip'
+                sh '. venv/bin/activate && pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '. venv/bin/activate && pytest --maxfail=1 --disable-warnings'
+            }
+        }
+    }
+}
+
+Commit and push this file to main.
+
+------------------------------------------------------------
+🔁 STEP 7 — Configure GitHub Webhook
+------------------------------------------------------------
+
+Go to your repository on GitHub:
+
+Repository
+→ Settings
+→ Webhooks
+→ Add webhook
+
+Payload URL:
+https://abc123.ngrok-free.app/github-webhook/
+
+IMPORTANT:
+- Replace with your ngrok URL
+- Must end with /github-webhook/
+
+Content Type:
+application/json
+
+Trigger:
+Just the push event
+
+Active:
+Enabled
+
+Click:
+Add webhook
+
+------------------------------------------------------------
+⚙️ STEP 8 — Enable GitHub Trigger in Jenkins Job
+------------------------------------------------------------
+
+Open your Jenkins pipeline job.
+
+Scroll to:
+
+Build Triggers
+
+Enable:
+
+GitHub hook trigger for GITScm polling
+
+Click Save.
+
+------------------------------------------------------------
+🧪 STEP 9 — Test The Pipeline
+------------------------------------------------------------
+
+1. Create a new branch
+2. Make a small code change
+3. Create a Pull Request
+4. Merge into main
+
+Expected result:
+
+- GitHub sends webhook
+- ngrok forwards to Jenkins
+- Jenkins pipeline starts automatically
+- pytest executes
+
+------------------------------------------------------------
+🚨 IMPORTANT NOTES
+------------------------------------------------------------
+
+1. If you restart ngrok:
+   - The URL changes
+   - You must update:
+       - Jenkins URL (Step 4)
+       - GitHub webhook (Step 7)
+
+2. If webhook fails:
+   - Go to GitHub
+   - Settings → Webhooks
+   - Click webhook
+   - Check "Recent Deliveries"
+
+Status meanings:
+200 → Success
+404 → Wrong URL
+403 → Jenkins security issue
+
+------------------------------------------------------------
+🏆 RESULT
+------------------------------------------------------------
+
+You now have a working CI pipeline:
+
+GitHub
+→ ngrok tunnel
+→ Local Jenkins
+→ Python virtual environment
+→ Pytest execution
+
+This mirrors how real CI systems work in professional environments.
+
+------------------------------------------------------------
+END OF GUIDE
+------------------------------------------------------------
