@@ -29,3 +29,4 @@ websocket-client==1.8.0
 wheel==0.45.1
 wsproto==1.2.0
 pytest-html
+rich==14.2.0
